@@ -3,7 +3,7 @@ _base_ = [
     '../_base_/datasets/coco_instance.py',
     '../_base_/schedules/schedule_1x.py', '../_base_/default_runtime.py'
 ]
-
+# gpu_ids = [1]
 model = dict(
     backbone=dict(
         embed_dim=96,
@@ -66,9 +66,14 @@ optimizer = dict(_delete_=True, type='AdamW', lr=0.0001, betas=(0.9, 0.999), wei
                                                  'relative_position_bias_table': dict(decay_mult=0.),
                                                  'norm': dict(decay_mult=0.)}))
 lr_config = dict(step=[8, 11])
-runner = dict(type='EpochBasedRunnerAmp', max_epochs=12)
+# runner = dict(type='EpochBasedRunnerAmp', max_epochs=12)
+runner = dict(type='EpochBasedRunner', max_epochs=12)
+
+# 每 5 轮迭代进行一次测试评估
+evaluation = dict(interval=5)
 
 # do not use mmdet version fp16
+'''
 fp16 = None
 optimizer_config = dict(
     type="DistOptimizerHook",
@@ -78,3 +83,4 @@ optimizer_config = dict(
     bucket_size_mb=-1,
     use_fp16=True,
 )
+'''
